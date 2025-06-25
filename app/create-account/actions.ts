@@ -1,5 +1,9 @@
 "use server";
 import { z } from "zod";
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+} from "@/lib/constants";
 
 const checkUsername = (username: string) => {
   return !username.includes("admin");
@@ -14,10 +18,6 @@ const checkPassword = ({
 }) => {
   return password === confirm_password;
 };
-
-const passwordRegex = new RegExp(
-  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/,
-);
 
 const formSchema = z
   .object({
@@ -37,12 +37,14 @@ const formSchema = z
     email: z.string().email().toLowerCase().trim(),
     password: z
       .string()
-      .min(10)
+      .min(PASSWORD_MIN_LENGTH)
       .regex(
-        passwordRegex,
+        PASSWORD_REGEX,
         "Password must contain at least one letter, one number, and one special character",
       ),
-    confirm_password: z.string().min(10),
+    confirm_password: z
+      .string()
+      .min(PASSWORD_MIN_LENGTH),
   })
   .refine(checkPassword, {
     message: "Passwords do not match",
