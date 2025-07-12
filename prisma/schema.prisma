@@ -14,13 +14,23 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  username   String   @unique
-  email      String?  @unique
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  email      String?    @unique
   password   String?
-  phone      String?  @unique
-  github_id  String?  @unique
-  avatar     String?  @default("https://i.namu.wiki/i/aO_f1AJViMwOdKsyf1G2IYHIL4lrRfYABPUB0svanQXLqk7qGsyS7gpgCQrQIkz67IrUMwYqVWtbTG4spTM452cyMYbZVkJmcoMyRwLHFCNklLuIVj-rObzYUxnWkx97Br7VMTc8zFKVPtqNCnw4mw.webp")
+  phone      String?    @unique
+  github_id  String?    @unique
+  avatar     String?    @default("https://i.namu.wiki/i/aO_f1AJViMwOdKsyf1G2IYHIL4lrRfYABPUB0svanQXLqk7qGsyS7gpgCQrQIkz67IrUMwYqVWtbTG4spTM452cyMYbZVkJmcoMyRwLHFCNklLuIVj-rObzYUxnWkx97Br7VMTc8zFKVPtqNCnw4mw.webp")
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  SMSToken   SMSToken[]
+}
+
+model SMSToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
 }
